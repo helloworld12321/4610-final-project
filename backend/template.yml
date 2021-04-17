@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  4610-final-project
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  # We need at least one function in order to spin up an API gateway.
+  # This function doesn't actually do anything useful; it's just a placeholder.
+  helloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hello.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: A "Hello, World!" function.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+
+  # A DynamoDB table to store geographical information about cities and the
+  # distances between them.
+  CityData:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      # We only need to declare those attributes that we're using for keys.
+      # (See https://stackoverflow.com/a/55080737)
+      AttributeDefinitions:
+        - AttributeName: region
+          AttributeType: S
+      # The key "region" uniquely identifies a set of cities. For example,
+      # you might have one set of cities in the region "Minnesota" and another
+      # set of cities in the region #
+      KeySchema:
+        - AttributeName: region
+          KeyType: HASH
+      # We'll limit the database to 500 reads and 50 writes per second. That
+      # should be more than enough.
+      ProvisionedThroughput:
+        ReadCapacityUnits: 500
+        WriteCapacityUnits: 50
+
+  # A DynamoDB table to store paths that visit a sequence of cities in a
+  # certain order.
+  # We're interested in *circuits*--that is, paths that visit every city in a
+  # region, and that start and end in the same place.
+  # We're going to try to evolve an optimal circuit; the shortest circuit
+  # around a group of cities.
+  # (When we're working with these routes, we're thinking of distance in the
+  # air, as the crow flies. That way, we don't have to deal with the
+  # complexities of the highway network.)
+  Routes:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        # We're going to construct both the partition key and the sort key by
+        # concatenating a bunch of other fields together.
+        # They're both going to be big long strings.
+        # And then, since we'll mostly be using the sort key for sorting and
+        # querying rather than getting single items, we'll include a global
+        # secondary index, routeId.
+        - AttributeName: partitionKey
+          AttributeType: S
+        - AttributeName: sortKey
+          AttributeType: S
+        - AttributeName: routeId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: partitionKey
+          KeyType: HASH
+        - AttributeName: sortKey
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: routeIdIndex
+          KeySchema:
+            - AttributeName: routeId
+              KeyType: HASH
+          Projection:
+            ProjectionType: KEYS_ONLY
+          # We expect the table of routes to be particularly write-heavy, since
+          # we'll be generating a lot of routes in a very short span of time.
+          # We'll start it at 500 writes per second, and maybe scale that up if
+          # it turns out that's not enough.
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1000
+            WriteCapacityUnits: 500
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1000
+        WriteCapacityUnits: 500
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
