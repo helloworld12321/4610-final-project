@@ -1,5 +1,5 @@
 /**
- * This file contains methods for searching for the best routes within a
+ * This file contains methods for searching for the shortest routes within a
  * particular run ID and generation.
  */
 
