@@ -11,25 +11,6 @@ $('#get-best-routes').on('click', getBestRoutes);
 $('#get-route-by-id').on('click', getRouteById);
 
 /**
- * This generates a single random route by POSTing the runId and generation to
- * the `/routes` endpoint. It's asynchronous (like requests across the network
- * typically are), and the showRoute() function is called when the request
- * response comes in.
- */
-function makeRandomRoute(runId, generation) {
-    $.ajax({
-        method: 'POST',
-        url: `${baseUrl}/routes`,
-        data: JSON.stringify({ runId, generation}),
-        contentType: 'application/json',
-        // When a request completes, call `showRoute()` to display the
-        // route on the web page.
-        success: showNewRoute,
-        error: showErrorMakingRoute,
-    });
-}
-
-/**
  * Generates a collection of new routes, where the number to generate (and the
  * runId and generation) are specified in the HTML text fields. Note that we
  * don't do any kind of sanity checking here, when it would make sense to at
@@ -43,18 +24,35 @@ function makeRandomRoutes() {
     // `showRoute()` to "fill" it with the incoming new routes.
     $('#new-route-list').text('');
     for (let i = 0; i < numToGenerate; i++) {
-        makeRandomRoute(runId, generation);
+        makeOneRandomRoute(runId, generation)
+          .done(showNewRoute)
+          .fail(showErrorMakingRoute);
     }
+}
+
+/**
+ * This generates a single random route by POSTing the runId and generation to
+ * the `/routes` endpoint. It's asynchronous (like requests across the network
+ * typically are), and the showRoute() function is called when the request
+ * response comes in.
+ */
+function makeOneRandomRoute(runId, generation) {
+    return $.ajax({
+        method: 'POST',
+        url: `${baseUrl}/routes`,
+        data: JSON.stringify({ runId, generation }),
+        contentType: 'application/json',
+    });
 }
 
 /**
  * When a request for a new route completes successfully, add a `<li>…</li>`
  * element to `#new-route-list` with that routes information.
  */
-function showNewRoute(result) {
-    console.log(`New route received from API: ${result}`);
-    const routeId = result.routeId;
-    const length = result.length;
+function showNewRoute(responseBody) {
+    console.log(`New route received from API: ${responseBody}`);
+    const routeId = responseBody.routeId;
+    const length = responseBody.length;
     $('<li></li>')
         .text(`Generated route ${routeId} with length ${length}`)
         .appendTo('#new-route-list');
