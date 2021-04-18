@@ -20,6 +20,14 @@ export function addToBestRouteList(string) {
     $('<li></li>').text(string).appendTo('#best-route-list');
 }
 
+export function clearRouteByIdText() {
+    $('#route-by-id').text('')
+}
+
+export function setRouteByIdText(string) {
+    $('#route-by-id').text(string)
+}
+
 export const form = {
     getRunId() {
         const runId = $('#run-id-text-field').val();

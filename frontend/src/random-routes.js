@@ -24,6 +24,7 @@ export function makeRandomRoutes() {
     // Reset the contents of `#new-route-list` so that it's ready for
     // `showRoute()` to "fill" it with the incoming new routes.
     page.clearNewRouteList();
+
     for (let i = 0; i < numToGenerate; i++) {
         makeOneRandomRoute(runId, generation)
           .done(showNewRoute)
