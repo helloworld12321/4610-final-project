@@ -8,8 +8,16 @@ export function clearNewRouteList() {
     $('#new-route-list').text('');
 }
 
-export function addNewRouteToList(string) {
+export function addToNewRouteList(string) {
     $('<li></li>').text(string).appendTo('#new-route-list');
+}
+
+export function clearBestRouteList() {
+    $('#best-route-list').text('');
+}
+
+export function addToBestRouteList(string) {
+    $('<li></li>').text(string).appendTo('#best-route-list');
 }
 
 export const form = {

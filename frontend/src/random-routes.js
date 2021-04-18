@@ -16,8 +16,8 @@ export function makeRandomRoutes() {
         runId = page.form.getRunId();
         generation = page.form.getGeneration();
         numToGenerate = page.form.getNumToGenerate();
-    } catch (problem) {
-        alert(problem);
+    } catch (formProblem) {
+        alert(formProblem);
         return;
     }
 
@@ -54,7 +54,7 @@ function showNewRoute(responseBody) {
     console.log(`New route received from API: ${responseBody}`);
     const routeId = responseBody.routeId;
     const length = responseBody.length;
-    page.addNewRouteToList(`Generated route ${routeId} with length ${length}`);
+    page.addToNewRouteList(`Generated route ${routeId} with length ${length}`);
 }
 
 /**
@@ -64,5 +64,5 @@ function showNewRoute(responseBody) {
 function showErrorMakingRoute(xhr, _, errorThrown) {
     console.error(`Error generating random route: ${errorThrown}`);
     console.error(`Response: ${xhr.responseText}`);
-    page.addNewRouteToList(`Error: ${errorThrown}`);
+    page.addToNewRouteList(`Error: ${errorThrown}`);
 }

@@ -3,7 +3,8 @@
  */
 
 import $ from 'jquery';
-import { makeRandomRoutes } from './random-routes'
+import { makeRandomRoutes } from './random-routes';
+import { getBestRoutes } from './best-routes';
 import './index.css';
 
 // Set up the functions to be called when the user clicks on any
@@ -11,22 +12,6 @@ import './index.css';
 $('#generate-random-routes').on('click', makeRandomRoutes);
 $('#get-best-routes').on('click', getBestRoutes);
 $('#get-route-by-id').on('click', getRouteById);
-
-/**
- * Make a `GET` request that gets the K best routes.
- *
- * The form of the `GET` request is:
- *   …/best?runId=…&generation=…&numToReturn=…
- *
- * This request will return an array of
- *   { length: …, routeId: … }
- *
- * You should add each of these to `#best-route-list` (after clearing it
- * first).
- */
-function getBestRoutes() {
-    alert('You need to implement getBestRoutes()');
-}
 
 /**
  * Make a `GET` request that gets all the route information for the given
