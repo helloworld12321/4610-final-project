@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import './index.css';
 
-const baseUrl = 'https://08noe16b16.execute-api.us-east-1.amazonaws.com/Prod/';
+const baseUrl = 'https://08noe16b16.execute-api.us-east-1.amazonaws.com/Prod';
 console.log(`The base URL is ${baseUrl}.`);
 
 // Set up the functions to be called when the user clicks on any
