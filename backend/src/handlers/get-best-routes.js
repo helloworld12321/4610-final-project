@@ -22,27 +22,25 @@ exports.handler = async (event, context) => {
         }
     }
 
-    let bestRoutes;
     try {
-        bestRoutes = await getBestRoutes(runId, generation, numToReturn);
+        let bestRoutes = await getBestRoutes(runId, generation, numToReturn);
+        // The frontend expects the key to be named 'length', not 'distance'.
+        // (We call it 'distance' in the database since 'length' is one of
+        // DynamoDB's keywords.)
+        bestRoutes = bestRoutes.map(({ routeId, distance }) =>
+            ({ routeId, length: distance })
+        );
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify(bestRoutes),
+            headers: { 'Access-Control-Allow-Origin': '*' },
+        };
     } catch (err) {
-        console.error(`Problem getting best runs for generation ${generation} of ${runId}:`);
-        console.error(err);
         return errorResponse(500, err.message, context.awsRequestId);
     }
 
-    // The frontend expects the key to be named 'length', not 'distance'.
-    // (We call it 'distance' in the database since 'length' is one of
-    // DynamoDB's keywords.)
-    bestRoutes = bestRoutes.map(({ routeId, distance }) =>
-      ({ routeId, length: distance })
-    );
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(bestRoutes),
-        headers: { 'Access-Control-Allow-Origin': '*' },
-    };
 };
 
 function processQueryString(queryStringParameters) {

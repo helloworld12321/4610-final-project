@@ -43,3 +43,13 @@ exports.checkNumToReturn = (numToReturn) => {
         throw 'Bad input value for "numToReturn"';
     }
 };
+
+exports.checkRouteId = (routeId) => {
+    if (
+        routeId === undefined
+        || routeId === null
+        || routeId === ''
+    ) {
+        throw 'Bad input value for "routeId"';
+    }
+};

@@ -58,14 +58,34 @@ Resources:
             TableName: !Ref Routes
       Environment:
         Variables:
-          # Make the table name accessible as environment variable during
-          # the lambda's execution.
           ROUTES_TABLE: !Ref Routes
       Events:
         Api:
           Type: Api
           Properties:
             Path: /best
+            Method: GET
+
+  getRouteById:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-route-by-id.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: >-
+        Retrieve a route from the database using its ID.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref Routes
+      Environment:
+        Variables:
+          ROUTES_TABLE: !Ref Routes
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /routes/{routeId}
             Method: GET
 
   # A DynamoDB table to store geographical information about cities and the
@@ -121,12 +141,12 @@ Resources:
         - AttributeName: sortKey
           KeyType: RANGE
       GlobalSecondaryIndexes:
-        - IndexName: routeIdIndex
+        - IndexName: routeIdSecondaryIndex
           KeySchema:
             - AttributeName: routeId
               KeyType: HASH
           Projection:
-            ProjectionType: KEYS_ONLY
+            ProjectionType: ALL
           # We expect the table of routes to be particularly write-heavy, since
           # we'll be generating a lot of routes in a very short span of time.
           # We'll start it at 500 writes per second, and maybe scale that up if
