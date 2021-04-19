@@ -34,8 +34,8 @@ export async function getRouteById() {
         url: `${baseUrl}/routes/${encodeURIComponent(routeId)}`,
     }).then(([responseBody]) =>
         showRoute(responseBody),
-    ).catch(([xhr, _, errorThrown]) =>
-        showErrorGettingRoute(xhr, errorThrown),
+    ).catch(([xhr]) =>
+        showErrorGettingRoute(xhr),
     );
 }
 
@@ -43,8 +43,8 @@ function showRoute(responseBody) {
     page.setRouteByIdText(JSON.stringify(responseBody, null, 2));
 }
 
-function showErrorGettingRoute(xhr, errorThrown) {
-    console.error(`Error getting route by ID: ${errorThrown}`);
+function showErrorGettingRoute(xhr) {
+    console.error(`Error getting route by ID.`);
     console.error(`Response: ${xhr.responseText}`);
-    page.setRouteByIdText(`Error: ${errorThrown}`);
+    page.setRouteByIdText(`Error: ${xhr.responseText}`);
 }

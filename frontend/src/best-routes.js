@@ -44,8 +44,8 @@ export async function getBestRoutes() {
         url: `${baseUrl}/best?${queryString}`,
     }).then(([responseBody]) =>
         showBestRoutes(responseBody)
-    ).catch(([xhr, _, errorThrown]) =>
-        showErrorGettingBestRoutes(xhr, errorThrown)
+    ).catch(([xhr]) =>
+        showErrorGettingBestRoutes(xhr)
     );
 }
 
@@ -59,8 +59,8 @@ function showBestRoutes(responseBody) {
     }
 }
 
-function showErrorGettingBestRoutes(xhr, errorThrown) {
-    console.error(`Error getting best routes: ${errorThrown}`);
+function showErrorGettingBestRoutes(xhr) {
+    console.error(`Error getting best routes`);
     console.error(`Response: ${xhr.responseText}`);
-    page.addToBestRouteList(`Error: ${errorThrown}`);
+    page.addToBestRouteList(`Error: ${xhr.responseText}`);
 }

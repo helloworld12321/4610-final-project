@@ -32,8 +32,8 @@ export async function makeRandomRoutes() {
             generation,
         ).then(([responseBody]) =>
             showNewRoute(responseBody)
-        ).catch(([xhr, _, errorThrown]) =>
-            showErrorMakingRoute(xhr, errorThrown)
+        ).catch(([xhr]) =>
+            showErrorMakingRoute(xhr)
         );
 
         promises.push(makingARoutePromise);
@@ -71,8 +71,8 @@ function showNewRoute(responseBody) {
  * When a request for a new route completes unsuccessfully, add an element to
  * the `#new-route-list` with an error message.
  */
-function showErrorMakingRoute(xhr, errorThrown) {
-    console.error(`Error generating random route: ${errorThrown}`);
+function showErrorMakingRoute(xhr) {
+    console.error(`Error generating random route`);
     console.error(`Response: ${xhr.responseText}`);
-    page.addToNewRouteList(`Error: ${errorThrown}`);
+    page.addToNewRouteList(`Error: ${xhr.responseText}`);
 }
