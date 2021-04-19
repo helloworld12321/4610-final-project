@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Evo-TSP</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+    name="description"
+    content="Evolving solutions to an instance of the travelling salesperson problem."
+  >
+  <script defer src="bundle.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Evo-TSP</h1>
+    <p>Generate and retrieve routes passing through cities in Minnesota.</p>
+  </header>
+
+  <div>
+    <p>
+      (Later in the project, we'll generate the run ID and the generation for
+      you. At the moment, you'll have to add them in by hand.)
+    </p>
+
+    <label for="run-id-text-field">Run ID:</label>
+    <input type="text" id="run-id-text-field">
+
+    <label for="generation-text-field">Generation:</label>
+    <input type="text" id="generation-text-field">
+  </div>
+
+  <div>
+    <h2>Generate new random routes</h2>
+
+    <label for="num-to-generate">How many to generate?</label>
+    <input type="text" id="num-to-generate">
+
+    <button type="button" id="generate-random-routes">
+      Generate random routes
+    </button>
+
+    <div id="random-route-details">
+      <!-- Contents will be added dynamically. -->
+    </div>
+
+    <ol id="new-route-list">
+      <!-- Contents will be added dynamically. -->
+    </ol>
+  </div>
+
+  <div>
+    <h2>Get best routes</h2>
+
+    <label for="num-best-to-get">How many to get?</label>
+    <input type="text" id="num-best-to-get">
+
+    <button type="button" id="get-best-routes">Get best routes</button>
+
+    <ol id="best-route-list">
+      <!-- Contents will be added dynamically. -->
+    </ol>
+  </div>
+
+  <div class="get-route-by-id">
+    <h2>Get route by ID</h2>
+
+    <label for="route-id">Route ID to retrieve?</label>
+    <input type="text" id="route-id">
+
+    <button type="button" id="get-route-by-id">Get route by ID</button>
+
+    <div id="route-by-id">
+      <!-- Contents will be added dynamically. -->
+    </div>
+  </div>
+</body>
+</html>
