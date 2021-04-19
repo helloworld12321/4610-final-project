@@ -5,22 +5,87 @@ Description: >-
 Transform:
 - AWS::Serverless-2016-10-31
 
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+      AllowCredentials: "'*'"
+
 Resources:
-  # We need at least one function in order to spin up an API gateway.
-  # This function doesn't actually do anything useful; it's just a placeholder.
-  helloFunction:
+  generateRandomRoute:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/hello.handler
+      Handler: src/handlers/generate-random-route.handler
       Runtime: nodejs14.x
       MemorySize: 128
       Timeout: 100
-      Description: A "Hello, World!" function.
+      Description: >-
+        Generate a new random path among the cities in the "Minnesota region",
+        and add it to the Routes table.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref CityData
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Routes
+      # Make the table names accessible as environment variable during
+      # the lambda's execution. (We can't just refer to them as "CityData" and
+      # "Routes" because SAM munges the names somewhat during the build
+      # process.)
+      Environment:
+        Variables:
+          CITY_DATA_TABLE: !Ref CityData
+          ROUTES_TABLE: !Ref Routes
       Events:
         Api:
           Type: Api
           Properties:
-            Path: /
+            Path: /routes
+            Method: POST
+
+  getBestRoutes:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-best-routes.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: >-
+        Get the n shortest routes in a specified generation of a specified run.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref Routes
+      Environment:
+        Variables:
+          ROUTES_TABLE: !Ref Routes
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /best
+            Method: GET
+
+  getRouteById:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-route-by-id.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: >-
+        Retrieve a route from the database using its ID.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref Routes
+      Environment:
+        Variables:
+          ROUTES_TABLE: !Ref Routes
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /routes/{routeId}
             Method: GET
 
   # A DynamoDB table to store geographical information about cities and the
@@ -76,12 +141,12 @@ Resources:
         - AttributeName: sortKey
           KeyType: RANGE
       GlobalSecondaryIndexes:
-        - IndexName: routeIdIndex
+        - IndexName: routeIdSecondaryIndex
           KeySchema:
             - AttributeName: routeId
               KeyType: HASH
           Projection:
-            ProjectionType: KEYS_ONLY
+            ProjectionType: ALL
           # We expect the table of routes to be particularly write-heavy, since
           # we'll be generating a lot of routes in a very short span of time.
           # We'll start it at 500 writes per second, and maybe scale that up if

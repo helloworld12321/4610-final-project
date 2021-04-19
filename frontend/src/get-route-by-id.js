@@ -31,7 +31,7 @@ export async function getRouteById() {
 
     await ajaxPromise({
         method: 'GET',
-        url: `${baseUrl}/route/${encodeURIComponent(routeId)}`,
+        url: `${baseUrl}/routes/${encodeURIComponent(routeId)}`,
     }).then(([responseBody]) =>
         showRoute(responseBody),
     ).catch(([xhr, _, errorThrown]) =>
