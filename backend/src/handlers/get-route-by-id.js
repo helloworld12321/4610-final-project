@@ -29,7 +29,7 @@ exports.handler = async (event, context) => {
 
         if (dbResults.Items.length === 0) {
             return errorResponse(
-                400,
+                404,
                 `No route found with ID ${routeId}`,
                 context.awsRequestId,
             );

@@ -32,8 +32,8 @@ export async function makeRandomRoutes() {
             generation,
         ).then(([responseBody]) =>
             showNewRoute(responseBody)
-        ).catch(([xhr, _, errorThrown]) =>
-            showErrorMakingRoute(xhr, errorThrown)
+        ).catch(([xhr]) =>
+            showErrorMakingRoute(xhr)
         );
 
         promises.push(makingARoutePromise);
@@ -61,7 +61,6 @@ function makeOneRandomRoute(runId, generation) {
  * element to `#new-route-list` with that routes information.
  */
 function showNewRoute(responseBody) {
-    console.log(`New route received from API: ${responseBody}`);
     const routeId = responseBody.routeId;
     const length = responseBody.length;
     page.addToNewRouteList(`Generated route ${routeId} with length ${length}`);
@@ -71,8 +70,8 @@ function showNewRoute(responseBody) {
  * When a request for a new route completes unsuccessfully, add an element to
  * the `#new-route-list` with an error message.
  */
-function showErrorMakingRoute(xhr, errorThrown) {
-    console.error(`Error generating random route: ${errorThrown}`);
+function showErrorMakingRoute(xhr) {
+    console.error(`Error generating random route`);
     console.error(`Response: ${xhr.responseText}`);
-    page.addToNewRouteList(`Error: ${errorThrown}`);
+    page.addToNewRouteList(`Error: ${xhr.responseText}`);
 }
