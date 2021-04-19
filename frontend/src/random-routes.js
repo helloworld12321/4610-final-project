@@ -2,7 +2,7 @@
  * This file contains methods for generating random routes.
  */
 
-import $ from 'jquery';
+import { ajaxPromise } from './utils';
 import * as page from './page';
 import { baseUrl } from './config';
 
@@ -10,7 +10,7 @@ import { baseUrl } from './config';
  * Generates a collection of new routes, where the number to generate (and the
  * runId and generation) are specified in the HTML text fields.
  */
-export function makeRandomRoutes() {
+export async function makeRandomRoutes() {
     let runId, generation, numToGenerate;
     try {
         runId = page.form.getRunId();
@@ -25,11 +25,20 @@ export function makeRandomRoutes() {
     // `showRoute()` to "fill" it with the incoming new routes.
     page.clearNewRouteList();
 
+    const promises = [];
     for (let i = 0; i < numToGenerate; i++) {
-        makeOneRandomRoute(runId, generation)
-          .done(showNewRoute)
-          .fail(showErrorMakingRoute);
+        const makingARoutePromise = makeOneRandomRoute(
+            runId,
+            generation,
+        ).then(([responseBody]) =>
+            showNewRoute(responseBody)
+        ).catch(([xhr, _, errorThrown]) =>
+            showErrorMakingRoute(xhr, errorThrown)
+        );
+
+        promises.push(makingARoutePromise);
     }
+    await Promise.all(promises);
 }
 
 /**
@@ -39,7 +48,7 @@ export function makeRandomRoutes() {
  * response comes in.
  */
 function makeOneRandomRoute(runId, generation) {
-    return $.ajax({
+    return ajaxPromise({
         method: 'POST',
         url: `${baseUrl}/routes`,
         data: JSON.stringify({ runId, generation }),
@@ -62,7 +71,7 @@ function showNewRoute(responseBody) {
  * When a request for a new route completes unsuccessfully, add an element to
  * the `#new-route-list` with an error message.
  */
-function showErrorMakingRoute(xhr, _, errorThrown) {
+function showErrorMakingRoute(xhr, errorThrown) {
     console.error(`Error generating random route: ${errorThrown}`);
     console.error(`Response: ${xhr.responseText}`);
     page.addToNewRouteList(`Error: ${errorThrown}`);

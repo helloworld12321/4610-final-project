@@ -4,6 +4,7 @@
  */
 
 import $ from 'jquery';
+import { ajaxPromise } from './utils';
 import * as page from './page';
 import { baseUrl } from './config';
 
@@ -19,7 +20,7 @@ import { baseUrl } from './config';
  * You should add each of these to `#best-route-list` (after clearing it
  * first).
  */
-export function getBestRoutes() {
+export async function getBestRoutes() {
     let runId, generation, numBestToGet;
     try {
         runId = page.form.getRunId();
@@ -38,13 +39,13 @@ export function getBestRoutes() {
         numToReturn: numBestToGet,
     });
 
-    $.ajax({
+    await ajaxPromise({
         method: 'GET',
         url: `${baseUrl}/best?${queryString}`,
-    }).done(
-        showBestRoutes,
-    ).fail(
-        showErrorGettingBestRoutes,
+    }).then(([responseBody]) =>
+        showBestRoutes(responseBody)
+    ).catch(([xhr, _, errorThrown]) =>
+        showErrorGettingBestRoutes(xhr, errorThrown)
     );
 }
 
@@ -58,7 +59,7 @@ function showBestRoutes(responseBody) {
     }
 }
 
-function showErrorGettingBestRoutes(xhr, _, errorThrown) {
+function showErrorGettingBestRoutes(xhr, errorThrown) {
     console.error(`Error getting best routes: ${errorThrown}`);
     console.error(`Response: ${xhr.responseText}`);
     page.addToBestRouteList(`Error: ${errorThrown}`);

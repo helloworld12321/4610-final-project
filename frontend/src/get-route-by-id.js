@@ -2,7 +2,7 @@
  * This file contains methods for searching for a route in the database by ID.
  */
 
-import $ from 'jquery';
+import { ajaxPromise } from './utils';
 import * as page from './page';
 import { baseUrl } from './config';
 
@@ -18,7 +18,7 @@ import { baseUrl } from './config';
  * You should display the returned information in `#route-by-id-elements`
  * (after clearing it first).
  */
-export function getRouteById() {
+export async function getRouteById() {
     let routeId;
     try {
         routeId = page.form.getRouteId();
@@ -29,13 +29,13 @@ export function getRouteById() {
 
     page.clearRouteByIdText();
 
-    $.ajax({
+    await ajaxPromise({
         method: 'GET',
         url: `${baseUrl}/route/${encodeURIComponent(routeId)}`,
-    }).done(
-        showRoute,
-    ).fail(
-        showErrorGettingRoute,
+    }).then(([responseBody]) =>
+        showRoute(responseBody),
+    ).catch(([xhr, _, errorThrown]) =>
+        showErrorGettingRoute(xhr, errorThrown),
     );
 }
 
@@ -43,7 +43,7 @@ function showRoute(responseBody) {
     page.setRouteByIdText(JSON.stringify(responseBody, null, 2));
 }
 
-function showErrorGettingRoute(xhr, _, errorThrown) {
+function showErrorGettingRoute(xhr, errorThrown) {
     console.error(`Error getting route by ID: ${errorThrown}`);
     console.error(`Response: ${xhr.responseText}`);
     page.setRouteByIdText(`Error: ${errorThrown}`);
