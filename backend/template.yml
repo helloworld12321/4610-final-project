@@ -5,7 +5,45 @@ Description: >-
 Transform:
 - AWS::Serverless-2016-10-31
 
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+      AllowCredentials: "'*'"
+
 Resources:
+  generateRandomRoute:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/generate-random-route.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: >-
+        Generate a new random path among the cities in the "Minnesota region",
+        and add it to the Routes table.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref CityData
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Routes
+      # Make the table names accessible as environment variable during
+      # the lambda's execution. (We can't just refer to them as "CityData" and
+      # "Routes" because SAM munges the names somewhat during the build
+      # process.)
+      Environment:
+        Variables:
+          CITY_DATA_TABLE: !Ref CityData
+          ROUTES_TABLE: !Ref Routes
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /routes
+            Method: POST
+
   getBestRoutes:
     Type: AWS::Serverless::Function
     Properties:
