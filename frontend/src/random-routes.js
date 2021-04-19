@@ -61,7 +61,6 @@ function makeOneRandomRoute(runId, generation) {
  * element to `#new-route-list` with that routes information.
  */
 function showNewRoute(responseBody) {
-    console.log(`New route received from API: ${responseBody}`);
     const routeId = responseBody.routeId;
     const length = responseBody.length;
     page.addToNewRouteList(`Generated route ${routeId} with length ${length}`);
