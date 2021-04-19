@@ -13,7 +13,7 @@
 /*!*************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/index.css ***!
   \*************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
+/****/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, \"\", \"\"]);\n// Exports\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);\n\n\n//# sourceURL=webpack://4610-final-project-frontend/./src/index.css?./node_modules/css-loader/dist/cjs.js");
@@ -114,7 +114,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getRouteById\": () => (/* binding */ getRouteById)\n/* harmony export */ });\n/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ \"./src/utils.js\");\n/* harmony import */ var _page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page */ \"./src/page.js\");\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n/**\n * This file contains methods for searching for a route in the database by ID.\n */\n\n\n\n\n\n/**\n * Make a `GET` request that gets all the route information for the given\n * `routeId`.\n *\n * The form of the `GET` request is:\n *   …/routes/:routeId\n *\n * This request will return a complete route JSON object.\n *\n * You should display the returned information in `#route-by-id-elements`\n * (after clearing it first).\n */\nasync function getRouteById() {\n    let routeId;\n    try {\n        routeId = _page__WEBPACK_IMPORTED_MODULE_1__.form.getRouteId();\n    } catch (formProblem) {\n        alert(formProblem);\n        return;\n    }\n\n    _page__WEBPACK_IMPORTED_MODULE_1__.clearRouteByIdText();\n\n    await (0,_utils__WEBPACK_IMPORTED_MODULE_0__.ajaxPromise)({\n        method: 'GET',\n        url: `${_config__WEBPACK_IMPORTED_MODULE_2__.baseUrl}/route/${encodeURIComponent(routeId)}`,\n    }).then(([responseBody]) =>\n        showRoute(responseBody),\n    ).catch(([xhr, _, errorThrown]) =>\n        showErrorGettingRoute(xhr, errorThrown),\n    );\n}\n\nfunction showRoute(responseBody) {\n    _page__WEBPACK_IMPORTED_MODULE_1__.setRouteByIdText(JSON.stringify(responseBody, null, 2));\n}\n\nfunction showErrorGettingRoute(xhr, errorThrown) {\n    console.error(`Error getting route by ID: ${errorThrown}`);\n    console.error(`Response: ${xhr.responseText}`);\n    _page__WEBPACK_IMPORTED_MODULE_1__.setRouteByIdText(`Error: ${errorThrown}`);\n}\n\n\n//# sourceURL=webpack://4610-final-project-frontend/./src/get-route-by-id.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getRouteById\": () => (/* binding */ getRouteById)\n/* harmony export */ });\n/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ \"./src/utils.js\");\n/* harmony import */ var _page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page */ \"./src/page.js\");\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n/**\n * This file contains methods for searching for a route in the database by ID.\n */\n\n\n\n\n\n/**\n * Make a `GET` request that gets all the route information for the given\n * `routeId`.\n *\n * The form of the `GET` request is:\n *   …/routes/:routeId\n *\n * This request will return a complete route JSON object.\n *\n * You should display the returned information in `#route-by-id-elements`\n * (after clearing it first).\n */\nasync function getRouteById() {\n    let routeId;\n    try {\n        routeId = _page__WEBPACK_IMPORTED_MODULE_1__.form.getRouteId();\n    } catch (formProblem) {\n        alert(formProblem);\n        return;\n    }\n\n    _page__WEBPACK_IMPORTED_MODULE_1__.clearRouteByIdText();\n\n    await (0,_utils__WEBPACK_IMPORTED_MODULE_0__.ajaxPromise)({\n        method: 'GET',\n        url: `${_config__WEBPACK_IMPORTED_MODULE_2__.baseUrl}/routes/${encodeURIComponent(routeId)}`,\n    }).then(([responseBody]) =>\n        showRoute(responseBody),\n    ).catch(([xhr, _, errorThrown]) =>\n        showErrorGettingRoute(xhr, errorThrown),\n    );\n}\n\nfunction showRoute(responseBody) {\n    _page__WEBPACK_IMPORTED_MODULE_1__.setRouteByIdText(JSON.stringify(responseBody, null, 2));\n}\n\nfunction showErrorGettingRoute(xhr, errorThrown) {\n    console.error(`Error getting route by ID: ${errorThrown}`);\n    console.error(`Response: ${xhr.responseText}`);\n    _page__WEBPACK_IMPORTED_MODULE_1__.setRouteByIdText(`Error: ${errorThrown}`);\n}\n\n\n//# sourceURL=webpack://4610-final-project-frontend/./src/get-route-by-id.js?");
 
 /***/ }),
 
@@ -166,7 +166,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -180,14 +180,14 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -200,7 +200,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -212,12 +212,12 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -228,13 +228,13 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = __webpack_require__("./src/index.js");
-/******/ 	
+/******/
 /******/ })()
 ;
