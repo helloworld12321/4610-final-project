@@ -6,21 +6,28 @@ Transform:
 - AWS::Serverless-2016-10-31
 
 Resources:
-  # We need at least one function in order to spin up an API gateway.
-  # This function doesn't actually do anything useful; it's just a placeholder.
-  helloFunction:
+  getBestRoutes:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/hello.handler
+      Handler: src/handlers/get-best-routes.handler
       Runtime: nodejs14.x
       MemorySize: 128
       Timeout: 100
-      Description: A "Hello, World!" function.
+      Description: >-
+        Get the n shortest routes in a specified generation of a specified run.
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref Routes
+      Environment:
+        Variables:
+          # Make the table name accessible as environment variable during
+          # the lambda's execution.
+          ROUTES_TABLE: !Ref Routes
       Events:
         Api:
           Type: Api
           Properties:
-            Path: /
+            Path: /best
             Method: GET
 
   # A DynamoDB table to store geographical information about cities and the
