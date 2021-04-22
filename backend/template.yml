@@ -104,11 +104,9 @@ Resources:
       KeySchema:
         - AttributeName: region
           KeyType: HASH
-      # We'll limit the database to 500 reads and 50 writes per second. That
-      # should be more than enough.
       ProvisionedThroughput:
-        ReadCapacityUnits: 500
-        WriteCapacityUnits: 50
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
 
   # A DynamoDB table to store paths that visit a sequence of cities in a
   # certain order.
@@ -147,16 +145,12 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
-          # We expect the table of routes to be particularly write-heavy, since
-          # we'll be generating a lot of routes in a very short span of time.
-          # We'll start it at 500 writes per second, and maybe scale that up if
-          # it turns out that's not enough.
           ProvisionedThroughput:
-            ReadCapacityUnits: 1000
-            WriteCapacityUnits: 500
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 2
       ProvisionedThroughput:
-        ReadCapacityUnits: 1000
-        WriteCapacityUnits: 500
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 2
 
 Outputs:
   WebEndpoint:
