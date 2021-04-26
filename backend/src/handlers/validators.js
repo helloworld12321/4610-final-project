@@ -10,13 +10,21 @@
  * Otherwise, it will return normally.
  */
 
+class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ValidationError';
+      }
+}
+exports.ValidationError = ValidationError;
+
 exports.checkRunId = (runId) => {
     if (
         runId === undefined
-        || runId == null
+        || runId === null
         || runId === ''
     ) {
-        throw 'Bad input value for "runId"';
+        throw new ValidationError('Bad input value for "runId"');
     }
 };
 
@@ -27,8 +35,7 @@ exports.checkGeneration = (generation) => {
         || generation === ''
         || !Number.isInteger(Number(generation))
     ) {
-        console.log('Hi!');
-        throw 'Bad input value for "generation"';
+        throw new ValidationError( 'Bad input value for "generation"');
     }
 };
 
@@ -40,7 +47,7 @@ exports.checkNumToReturn = (numToReturn) => {
         || !Number.isInteger(Number(numToReturn))
         || Number(numToReturn) < 0
     ) {
-        throw 'Bad input value for "numToReturn"';
+        throw new ValidationError('Bad input value for "numToReturn"');
     }
 };
 
@@ -50,6 +57,6 @@ exports.checkRouteId = (routeId) => {
         || routeId === null
         || routeId === ''
     ) {
-        throw 'Bad input value for "routeId"';
+        throw new ValidationError('Bad input value for "routeId"');
     }
 };

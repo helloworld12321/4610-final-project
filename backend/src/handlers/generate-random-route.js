@@ -16,8 +16,8 @@ exports.handler = async (event, context) => {
         runId = inputs.runId;
         generation = inputs.generation;
     } catch (err) {
-        if (typeof err === 'string') {
-            return errorResponse(400, err, context.awsRequestId);
+        if (err instanceof validators.ValidationError) {
+            return errorResponse(400, err.message, context.awsRequestId);
         } else {
             return errorResponse(500, err.message, context.awsRequestId);
         }
