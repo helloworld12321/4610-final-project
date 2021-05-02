@@ -45,7 +45,7 @@ exports.handler = async (event, context) => {
 
 function processQueryString(queryStringParameters) {
     if (!queryStringParameters) {
-        throw 'No query parameters';
+        throw new validators.ValidationError('No query parameters');
     }
     const { runId, generation, numToReturn } = queryStringParameters;
     validators.checkRunId(runId);

@@ -67,14 +67,14 @@ exports.handler = async (event, context) => {
 
 function processRequestBody(requestBody) {
     if (!requestBody) {
-        throw 'No request body';
+        throw new validators.ValidationError('No request body');
     }
 
     let jsonData;
     try {
         jsonData = JSON.parse(requestBody)
     } catch (err) {
-        throw 'Request body is not valid JSON';
+        throw new validators.ValidationError('Request body is not valid JSON');
     }
 
     const { runId, generation } = jsonData;

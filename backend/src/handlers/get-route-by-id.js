@@ -48,7 +48,7 @@ exports.handler = async (event, context) => {
 
 function processPathParameters(pathParameters) {
     if (!pathParameters) {
-        throw 'No query parameters';
+        throw new validators.ValidationError('No query parameters');
     }
     const routeId = pathParameters.routeId;
     validators.checkRouteId(routeId);
