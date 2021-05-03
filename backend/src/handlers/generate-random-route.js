@@ -1,5 +1,19 @@
 'use strict';
 
+/**
+ * Given:
+ *
+ * - a particular run of the evolutionary computation, and
+ * - the generation number in the evolutionary computation,
+ *
+ * this lambda:
+ *
+ * - generates a route passing through all the cities in the Minnesota
+ *   region,
+ * - adds it to the database under that run and generation number, and
+ * - sends back a brief summary of the route.
+ */
+
 const aws = require('aws-sdk');
 
 const config = require('../config');

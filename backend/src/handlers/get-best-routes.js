@@ -1,5 +1,13 @@
 'use strict';
 
+/**
+ * Given a particular run of the evolutionary computation and a generation
+ * number from that run, this lambda sends back brief summaries of the N
+ * shortest routes from that generation.
+ *
+ * (For a value of N provided by the caller.)
+ */
+
 const aws = require('aws-sdk');
 
 const config = require('../config');

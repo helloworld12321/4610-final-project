@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Given the ID of a route in the database, return the full contents of that
+ * route.
+ */
+
 const aws = require('aws-sdk');
 
 const config = require('../config');
