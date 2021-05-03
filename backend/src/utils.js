@@ -3,6 +3,22 @@
 const crypto = require('crypto');
 
 /**
+ * A general purpose function for creating a successful HTTP response with
+ * a JSON payload.
+ */
+exports.goodResponse = (statusCode, dataAsObject) => {
+    return {
+        statusCode,
+        body: JSON.stringify(dataAsObject),
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+        },
+    };
+};
+
+
+/**
  * A general-purpose function for creating an HTTP error response
  * (status code 4xx or 5xx).
  */
@@ -10,7 +26,10 @@ exports.errorResponse = (statusCode, errorMessage, awsRequestId) => {
     return {
         statusCode,
         body: JSON.stringify({ Error: errorMessage, Reference: awsRequestId }),
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+        },
     };
 };
 

@@ -17,7 +17,7 @@
 const aws = require('aws-sdk');
 
 const config = require('../config');
-const { errorResponse, uid } = require('../utils');
+const { goodResponse, errorResponse, uid } = require('../utils');
 const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
@@ -61,11 +61,7 @@ exports.handler = async (event, context) => {
             }
         }).promise();
 
-        return {
-            statusCode: 201,
-            body: JSON.stringify({ routeId, length }),
-            headers: { 'Access-Control-Allow-Origin': '*' },
-        };
+        return goodResponse(201, { routeId, length });
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
     }

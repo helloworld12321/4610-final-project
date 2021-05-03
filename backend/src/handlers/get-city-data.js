@@ -8,7 +8,7 @@
 const aws = require('aws-sdk');
 
 const config = require('../config');
-const { errorResponse } = require('../utils');
+const { goodResponse, errorResponse } = require('../utils');
 
 const ddb = new aws.DynamoDB.DocumentClient();
 
@@ -23,12 +23,7 @@ exports.handler = async (event, context) => {
             Key: { region: 'Minnesota' },
         }).promise();
         const cityData = dbResults.Item;
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify(cityData),
-            headers: { 'Access-Control-Allow-Origin': '*' },
-        };
+        return goodResponse(200, cityData);
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
     }

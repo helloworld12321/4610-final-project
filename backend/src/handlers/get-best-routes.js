@@ -11,7 +11,7 @@
 const aws = require('aws-sdk');
 
 const config = require('../config');
-const { errorResponse } = require('../utils');
+const { goodResponse, errorResponse } = require('../utils');
 const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
@@ -33,16 +33,10 @@ exports.handler = async (event, context) => {
 
     try {
         let bestRoutes = await getBestRoutes(runId, generation, numToReturn);
-        return {
-            statusCode: 200,
-            body: JSON.stringify(bestRoutes),
-            headers: { 'Access-Control-Allow-Origin': '*' },
-        };
+        return goodResponse(200, bestRoutes);
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
     }
-
-
 };
 
 function processQueryString(queryStringParameters) {
