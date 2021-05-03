@@ -2,8 +2,9 @@
 
 const aws = require('aws-sdk');
 
-const { errorResponse } = require('./error-response');
-const validators = require('./validators');
+const config = require('../config');
+const { errorResponse } = require('../utils');
+const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
 
@@ -24,6 +25,7 @@ exports.handler = async (event, context) => {
 
     try {
         let bestRoutes = await getBestRoutes(runId, generation, numToReturn);
+
         // The frontend expects the key to be named 'length', not 'distance'.
         // (We call it 'distance' in the database since 'length' is one of
         // DynamoDB's keywords.)
@@ -61,12 +63,13 @@ function processQueryString(queryStringParameters) {
 async function getBestRoutes(runId, generation, numToReturn) {
     // Note that the database is already sorted from shortest route to longest
     // route. So, the first `numToReturn` elements will be the best ones.
-    const partitionKey = runId + '#' + generation;
+    const runIdAndGeneration = runId + '#' + generation;
     const dbResults = await ddb.query({
-        TableName: process.env.ROUTES_TABLE,
+        TableName: config.ROUTES_TABLE,
+        IndexName: config.ROUTES_INDEX_SORTED_BY_DISTANCE,
         ProjectionExpression: 'routeId, distance',
-        KeyConditionExpression: 'partitionKey = :partitionKey',
-        ExpressionAttributeValues: { ':partitionKey': partitionKey },
+        KeyConditionExpression: 'runIdAndGeneration = :r',
+        ExpressionAttributeValues: { ':r': runIdAndGeneration },
         Limit: numToReturn,
     }).promise();
     return dbResults.Items;

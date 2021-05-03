@@ -2,8 +2,9 @@
 
 const aws = require('aws-sdk');
 
-const { errorResponse } = require('./error-response');
-const validators = require('./validators');
+const config = require('../config');
+const { errorResponse } = require('../utils');
+const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
 
@@ -21,10 +22,9 @@ exports.handler = async (event, context) => {
 
     try {
         const dbResults = await ddb.query({
-            TableName: process.env.ROUTES_TABLE,
-            IndexName: 'routeIdSecondaryIndex',
-            KeyConditionExpression: 'routeId = :routeId',
-            ExpressionAttributeValues: { ':routeId': routeId },
+            TableName: config.ROUTES_TABLE,
+            KeyConditionExpression: 'routeId = :r',
+            ExpressionAttributeValues: { ':r': routeId },
         }).promise();
 
         if (dbResults.Items.length === 0) {

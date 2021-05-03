@@ -1,14 +1,14 @@
 'use strict';
 
 const aws = require('aws-sdk');
-const { v4: uuidv4 } = require('uuid');
-const { printf } = require('fast-printf');
 
-const { errorResponse } = require('./error-response');
-const validators = require('./validators');
+const config = require('../config');
+const { errorResponse, uid } = require('../utils');
+const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
 
+// TODO: Switch to new database format
 exports.handler = async (event, context) => {
     let runId, generation;
     try {
@@ -25,30 +25,25 @@ exports.handler = async (event, context) => {
 
     try {
         const dbResults = await ddb.get({
-            TableName: process.env.CITY_DATA_TABLE,
+            TableName: config.CITY_DATA_TABLE,
             Key: { region: 'Minnesota' },
         }).promise();
         const cityData = dbResults.Item;
 
         const route = randomRoute(cityData);
-        const routeId = uuidv4();
+        const routeId = uid();
         const distance = totalDistance(route, cityData);
-        const partitionKey = runId + '#' + generation;
-        // I'll assume that, for sorting purposes,
-        // 1. the total distance will be smaller than one zettameter, and
-        // 2. we need at most millimeter precision.
-        const sortKey = printf('%021.3f', distance) + '#' + routeId;
+        const runIdAndGeneration = runId + '#' + generation;
 
         await ddb.put({
-            TableName: process.env.ROUTES_TABLE,
+            TableName: config.ROUTES_TABLE,
             Item: {
-                partitionKey,
-                sortKey,
                 routeId,
+                runIdAndGeneration,
                 runId,
                 generation,
-                route,
                 distance,
+                route,
             }
         }).promise();
 
