@@ -2,8 +2,8 @@
 
 /**
  * Given a particular run of the evolutionary computation and a generation
- * number from that run, this lambda sends back brief summaries of the N
- * shortest routes from that generation.
+ * number from that run, this lambda sends the IDs of the N shortest routes
+ * from that generation.
  *
  * (For a value of N provided by the caller.)
  */
@@ -33,14 +33,6 @@ exports.handler = async (event, context) => {
 
     try {
         let bestRoutes = await getBestRoutes(runId, generation, numToReturn);
-
-        // The frontend expects the key to be named 'length', not 'distance'.
-        // (We call it 'distance' in the database since 'length' is one of
-        // DynamoDB's keywords.)
-        bestRoutes = bestRoutes.map(({ routeId, distance }) =>
-            ({ routeId, length: distance })
-        );
-
         return {
             statusCode: 200,
             body: JSON.stringify(bestRoutes),
@@ -75,8 +67,9 @@ async function getBestRoutes(runId, generation, numToReturn) {
     const dbResults = await ddb.query({
         TableName: config.ROUTES_TABLE,
         IndexName: config.ROUTES_INDEX_SORTED_BY_DISTANCE,
-        ProjectionExpression: 'routeId, distance',
+        ProjectionExpression: 'routeId, #l',
         KeyConditionExpression: 'runIdAndGeneration = :r',
+        ExpressionAttributeNames: { '#l': 'length' },
         ExpressionAttributeValues: { ':r': runIdAndGeneration },
         Limit: numToReturn,
     }).promise();

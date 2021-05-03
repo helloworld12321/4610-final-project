@@ -46,7 +46,7 @@ exports.handler = async (event, context) => {
 
         const route = randomRoute(cityData);
         const routeId = uid();
-        const distance = totalDistance(route, cityData);
+        const length = totalDistance(route, cityData);
         const runIdAndGeneration = runId + '#' + generation;
 
         await ddb.put({
@@ -56,17 +56,14 @@ exports.handler = async (event, context) => {
                 runIdAndGeneration,
                 runId,
                 generation,
-                distance,
+                length,
                 route,
             }
         }).promise();
 
         return {
             statusCode: 201,
-            body: JSON.stringify({
-                routeId,
-                length: distance,
-            }),
+            body: JSON.stringify({ routeId, length }),
             headers: { 'Access-Control-Allow-Origin': '*' },
         };
     } catch (err) {

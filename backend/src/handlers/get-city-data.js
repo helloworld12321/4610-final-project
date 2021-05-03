@@ -18,7 +18,8 @@ exports.handler = async (event, context) => {
             TableName: config.CITY_DATA_TABLE,
             // Don't get the distances matrix; it's large and the client
             // doesn't need it.
-            ProjectionExpression: 'region, cities',
+            ProjectionExpression: '#r, cities',
+            ExpressionAttributeNames: { '#r': 'region' },
             Key: { region: 'Minnesota' },
         }).promise();
         const cityData = dbResults.Item;
