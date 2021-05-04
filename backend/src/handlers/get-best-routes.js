@@ -1,9 +1,18 @@
 'use strict';
 
+/**
+ * Given a particular run of the evolutionary computation and a generation
+ * number from that run, this lambda sends the IDs of the N shortest routes
+ * from that generation.
+ *
+ * (For a value of N provided by the caller.)
+ */
+
 const aws = require('aws-sdk');
 
-const { errorResponse } = require('./error-response');
-const validators = require('./validators');
+const config = require('../config');
+const { goodResponse, errorResponse } = require('../utils');
+const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
 
@@ -15,8 +24,8 @@ exports.handler = async (event, context) => {
         generation = inputs.generation;
         numToReturn = inputs.numToReturn;
     } catch (err) {
-        if (typeof err === 'string') {
-            return errorResponse(400, err, context.awsRequestId);
+        if (err instanceof validators.ValidationError) {
+            return errorResponse(400, err.message, context.awsRequestId);
         } else {
             return errorResponse(500, err.message, context.awsRequestId);
         }
@@ -24,28 +33,15 @@ exports.handler = async (event, context) => {
 
     try {
         let bestRoutes = await getBestRoutes(runId, generation, numToReturn);
-        // The frontend expects the key to be named 'length', not 'distance'.
-        // (We call it 'distance' in the database since 'length' is one of
-        // DynamoDB's keywords.)
-        bestRoutes = bestRoutes.map(({ routeId, distance }) =>
-            ({ routeId, length: distance })
-        );
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify(bestRoutes),
-            headers: { 'Access-Control-Allow-Origin': '*' },
-        };
+        return goodResponse(200, bestRoutes);
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
     }
-
-
 };
 
 function processQueryString(queryStringParameters) {
     if (!queryStringParameters) {
-        throw 'No query parameters';
+        throw new validators.ValidationError('No query parameters');
     }
     const { runId, generation, numToReturn } = queryStringParameters;
     validators.checkRunId(runId);
@@ -61,12 +57,14 @@ function processQueryString(queryStringParameters) {
 async function getBestRoutes(runId, generation, numToReturn) {
     // Note that the database is already sorted from shortest route to longest
     // route. So, the first `numToReturn` elements will be the best ones.
-    const partitionKey = runId + '#' + generation;
+    const runIdAndGeneration = runId + '#' + generation;
     const dbResults = await ddb.query({
-        TableName: process.env.ROUTES_TABLE,
-        ProjectionExpression: 'routeId, distance',
-        KeyConditionExpression: 'partitionKey = :partitionKey',
-        ExpressionAttributeValues: { ':partitionKey': partitionKey },
+        TableName: config.ROUTES_TABLE,
+        IndexName: config.ROUTES_INDEX_SORTED_BY_DISTANCE,
+        ProjectionExpression: 'routeId, #l',
+        KeyConditionExpression: 'runIdAndGeneration = :r',
+        ExpressionAttributeNames: { '#l': 'length' },
+        ExpressionAttributeValues: { ':r': runIdAndGeneration },
         Limit: numToReturn,
     }).promise();
     return dbResults.Items;
