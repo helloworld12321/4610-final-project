@@ -17,7 +17,8 @@
 const aws = require('aws-sdk');
 
 const config = require('../config');
-const { goodResponse, errorResponse, uid } = require('../utils');
+const { totalDistance } = require('../routes');
+const { goodResponse, errorResponse, uid, shuffledCopy } = require('../utils');
 const validators = require('../validators');
 
 const ddb = new aws.DynamoDB.DocumentClient();
@@ -97,36 +98,4 @@ function processRequestBody(requestBody) {
  */
 function randomRoute(cityData) {
     return shuffledCopy(cityData.cities.map(city => city.index));
-}
-
-function totalDistance(route, cityData) {
-    let distance = 0;
-    for (let i = 0; i < route.length; i++) {
-        const originIndex = route[i];
-        // Wrap around to the beginning of the route if necessary.
-        const destinationIndex = route[(i + 1) % route.length];
-
-        distance += cityData.distances[originIndex][destinationIndex];
-    }
-    return distance;
-}
-
-/**
- * Shuffle an array out-of-place.
- */
-function shuffledCopy(array) {
-    const copy = Array.from(array);
-    shuffle(copy);
-    return copy;
-}
-
-/**
- * Shuffle an array in place.
- * (With the Fisher-Yates algorithm.)
- */
-function shuffle(array) {
-    for (let i = array.length - 1; i >= 1; i--) {
-        const j = Math.floor((i + 1) * Math.random());
-        [array[i], array[j]] = [array[j], array[i]];
-    }
 }

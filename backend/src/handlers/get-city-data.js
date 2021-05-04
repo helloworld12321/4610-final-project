@@ -27,4 +27,4 @@ exports.handler = async (event, context) => {
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
     }
-}
+};

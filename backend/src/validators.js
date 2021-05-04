@@ -18,45 +18,75 @@ class ValidationError extends Error {
 }
 exports.ValidationError = ValidationError;
 
-exports.checkRunId = (runId) => {
-    if (
-        runId === undefined
-        || runId === null
-        || runId === ''
-    ) {
-        throw new ValidationError('Bad input value for "runId"');
-    }
-};
+function isUndefined(value) {
+    return value === undefined;
+}
 
-exports.checkGeneration = (generation) => {
-    if (
-        generation === undefined
-        || generation === null
-        || generation === ''
-        || !Number.isInteger(Number(generation))
-    ) {
-        throw new ValidationError( 'Bad input value for "generation"');
-    }
-};
+function isNull(value) {
+    return value === null;
+}
 
-exports.checkNumToReturn = (numToReturn) => {
-    if (
-        numToReturn === undefined
-        || numToReturn === null
-        || numToReturn === ''
-        || !Number.isInteger(Number(numToReturn))
-        || Number(numToReturn) < 0
-    ) {
-        throw new ValidationError('Bad input value for "numToReturn"');
-    }
-};
+function exists(value) {
+    return value !== undefined && value !== null && value !== '';
+}
 
-exports.checkRouteId = (routeId) => {
-    if (
-        routeId === undefined
-        || routeId === null
-        || routeId === ''
-    ) {
-        throw new ValidationError('Bad input value for "routeId"');
-    }
-};
+function isNumeric(value) {
+    return Number.isInteger(Number(value));
+}
+
+function isNonNegative(value) {
+    return Number(value) > 0;
+}
+
+function matchesAll(...predicates) {
+    return function(value) {
+        return predicates.every(p => p(value));
+    };
+}
+
+function matchesAny(...predicates) {
+    return function(value) {
+        return predicates.some(p => p(value));
+    };
+}
+
+function makeCheckerFor(name, predicate) {
+    return function check(value) {
+        if (!predicate(value)) {
+            throw new ValidationError(`Bad input value for "${name}"`);
+        }
+    };
+}
+
+exports.checkRunId = makeCheckerFor('runId', exists);
+
+exports.checkGeneration = makeCheckerFor(
+    'generation',
+    matchesAll(exists, isNumeric)
+);
+
+exports.checkNumToReturn = makeCheckerFor(
+    'numToReturn',
+    matchesAll(exists, isNonNegative, isNonNegative),
+);
+
+exports.checkNumChildren = makeCheckerFor(
+    'numChildren',
+    matchesAll(
+        exists,
+        isNumeric,
+        isNonNegative,
+        (numChildren => numChildren <= 25),
+    ),
+);
+
+exports.checkLengthStoreThreshold = makeCheckerFor(
+    'lengthStoreThreshold',
+    matchesAny(
+        isUndefined,
+        isNull,
+        matchesAll(exists, isNumeric, isNonNegative)
+    ),
+);
+
+exports.checkRouteId = makeCheckerFor('routeId', exists);
