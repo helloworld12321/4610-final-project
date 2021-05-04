@@ -103,7 +103,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"baseUrl\": () => (/* binding */ baseUrl)\n/* harmony export */ });\nconst baseUrl = 'https://rwtnoc36j9.execute-api.us-east-1.amazonaws.com/Prod';\nconsole.log(`The base URL is ${baseUrl}.`);\n\n\n//# sourceURL=webpack://4610-final-project-frontend/./src/config.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"baseUrl\": () => (/* binding */ baseUrl)\n/* harmony export */ });\nconst baseUrl = 'https://nukjd8zsga.execute-api.us-east-1.amazonaws.com/prod';\nconsole.log(`The base URL is ${baseUrl}.`);\n\n\n//# sourceURL=webpack://4610-final-project-frontend/./src/config.js?");
 
 /***/ }),
 
