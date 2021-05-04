@@ -71,6 +71,8 @@ exports.handler = async (event, context) => {
             })
         );
 
+        summarizedShortChildren.sort((a, b) => a.length - b.length);
+
         return goodResponse(201, summarizedShortChildren);
     } catch (err) {
         return errorResponse(500, err.message, context.awsRequestId);
