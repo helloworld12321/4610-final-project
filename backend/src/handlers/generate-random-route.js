@@ -59,7 +59,7 @@ exports.handler = async (event, context) => {
                 generation,
                 length,
                 route,
-            }
+            },
         }).promise();
 
         return goodResponse(201, { routeId, length });
