@@ -40,3 +40,4 @@ export const bestRouteCities = new ListContent('#best-route-cities');
 export const currentThreshold = new TextContent('#current-threshold');
 export const currentGeneration = new TextContent('#current-generation');
 export const newRoutesList = new ListContent('#new-routes-list');
+export const bestRoutesList = new ListContent('#best-routes-list');

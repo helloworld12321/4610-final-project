@@ -32,8 +32,7 @@ export function uid() {
  * Run `n` concurrent copies of a function `asyncFunction` that returns a
  * promise.
  *
- * Return a promise that resolves once all copies of the original function have
- * resolved.
+ * Return Promise.all() of all of those n promises.
  */
 export function times(n, f) {
     const promises = [];
@@ -41,4 +40,11 @@ export function times(n, f) {
         promises.push(f())
     }
     return Promise.all(promises);
+}
+
+/**
+ * Return a promise that resolves after a certain number of milliseconds..
+ */
+export function delay(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
 }
