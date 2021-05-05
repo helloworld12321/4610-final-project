@@ -31,6 +31,10 @@ function exists(value) {
 }
 
 function isNumeric(value) {
+    return !isNaN(Number(value));
+}
+
+function isInteger(value) {
     return Number.isInteger(Number(value));
 }
 
@@ -62,7 +66,7 @@ exports.checkRunId = makeCheckerFor('runId', exists);
 
 exports.checkGeneration = makeCheckerFor(
     'generation',
-    matchesAll(exists, isNumeric)
+    matchesAll(exists, isInteger)
 );
 
 exports.checkNumToReturn = makeCheckerFor(
@@ -74,7 +78,7 @@ exports.checkNumChildren = makeCheckerFor(
     'numChildren',
     matchesAll(
         exists,
-        isNumeric,
+        isInteger,
         isNonNegative,
         (numChildren => numChildren <= 25),
     ),

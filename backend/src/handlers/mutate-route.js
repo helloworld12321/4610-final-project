@@ -127,13 +127,18 @@ async function getRouteById(routeId) {
 }
 
 async function recordChildren(childRoutes) {
-    const putRequests = childRoutes.map(childRoute =>
-        ({ PutRequest: { Item: childRoute } })
-    );
+    if (childRoutes.length === 0) {
+        // DynamoDB errors out if you try to make a batch write with no items.
+        return;
+    } else {
+        const putRequests = childRoutes.map(childRoute =>
+            ({ PutRequest: { Item: childRoute } })
+        );
 
-    await ddb.batchWrite({
-        RequestItems: {
-            [config.ROUTES_TABLE]: putRequests,
-        },
-    }).promise();
+        await ddb.batchWrite({
+            RequestItems: {
+                [config.ROUTES_TABLE]: putRequests,
+            },
+        }).promise();
+    }
 }
