@@ -48,3 +48,7 @@ export function times(n, f) {
 export function delay(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
+
+export function swap([first, second]) {
+    return [second, first];
+}

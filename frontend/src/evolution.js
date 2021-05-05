@@ -32,6 +32,7 @@ export async function runEvolution() {
     content.currentGeneration.set(0);
 
     const cityData = await ajax.getCityData();
+    map.initCities(cityData);
 
     const { initialBest } = await initializePopulation(
         runId,
@@ -151,4 +152,6 @@ async function displayBestRoute(newBestRouteId, cityData) {
         const cityName = cityData.cities[index].cityName;
         content.bestRouteCities.add(cityName);
     }
+
+    map.setRoute(newBestRoute.route, cityData);
 }
