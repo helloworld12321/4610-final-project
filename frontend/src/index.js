@@ -15,10 +15,12 @@ $('#run-evolution').on('click', () => {
     // TODO
     // For the moment, we'll just test that everything works.
 
-    const runId = form.getRunId();
     const numGenerations  = form.getNumGenerations();
     const numParents = form.getNumParents();
     const populationSize = form.getPopulationSize();
+
+    content.runId.clear();
+    content.runId.set('abacabadabacaba')
 
     content.bestRouteId.clear();
     content.bestRouteId.set('foo');
@@ -39,7 +41,6 @@ $('#run-evolution').on('click', () => {
     content.currentGeneration.set('timey-wimey');
 
     content.newRoutesList.clear();
-    content.newRoutesList.add(`runId: ${typeof runId} ${runId}`);
     content.newRoutesList.add(`numGenerations: ${typeof numGenerations} ${numGenerations}`);
     content.newRoutesList.add(`numParents: ${typeof numParents} ${numParents}`);
     content.newRoutesList.add(`populationSize: ${typeof populationSize} ${populationSize}`);

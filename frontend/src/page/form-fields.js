@@ -4,15 +4,6 @@
 
 import $ from 'jquery';
 
-export function getRunId() {
-    const runId = $('#run-id').val();
-    if (runId === '') {
-        throw `Bad value for "${labelOf('run-id')}"`;
-    } else {
-        return runId;
-    }
-}
-
 export function getPopulationSize() {
     const populationSize = parseInt($('#population-size').val());
     if (isNaN(populationSize) || populationSize < 1) {

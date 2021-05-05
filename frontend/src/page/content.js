@@ -32,6 +32,7 @@ class ListContent {
     }
 }
 
+export const runId = new TextContent('#run-id');
 export const bestRouteId = new TextContent('#best-routeId');
 export const bestLength = new TextContent('#best-length');
 export const bestPath = new TextContent('#best-path');

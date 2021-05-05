@@ -20,15 +20,20 @@ body > :not(#map) {
 
 #global-parameters {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 3rem;
   align-items: center;
-  gap: 0 0.2em;
+  gap: 0.3em 0.3em;
 }
 
-#global-parameters label {
+#global-parameters .param-name {
   text-align: right;
 }
 
+input[type="number"] {
+  width: 3rem;
+}
+
+#run-id,
 #best-routeId,
 #best-path,
 #current-generation,
