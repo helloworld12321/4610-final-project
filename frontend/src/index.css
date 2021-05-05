@@ -35,14 +35,6 @@ input[type="number"] {
 
 #run-id,
 #best-routeId,
-#best-path,
-#current-generation,
-#new-routes-list > li,
-#best-routes-list > li {
+#best-path {
   font-family: monospace;
-}
-
-#new-routes-list > li::marker,
-#best-routes-list > li::marker {
-  font-family: serif;
 }
