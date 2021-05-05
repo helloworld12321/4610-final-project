@@ -3,14 +3,18 @@
  */
 
 import $ from 'jquery';
-import { runEvolution } from './evolution';
 
 import './index.css';
-import * as content from './page/content';
 import * as form from './page/form-fields';
 import * as map from './page/map';
+import { runEvolution } from './evolution';
 
 map.initMap();
+
+// Set reasonable defaults for the evolution.
+form.setPopulationSize(100);
+form.setNumParents(20);
+form.setNumGenerations(20);
 
 $('#run-evolution').on('click', () => {
     // Disable the button to prevent the user from running several evolutions
