@@ -1,0 +1,40 @@
+@import '~leaflet/dist/leaflet.css';
+
+body {
+  margin: 0;
+  width: 100%;
+}
+
+/*
+ * I'd like the map to be flush against the edges of the screen, but every
+ * other element should have some margins around it.
+ */
+body > :not(#map) {
+  margin: 1rem;
+}
+
+#map {
+  height: 60vh;
+  width: 100%;
+}
+
+#global-parameters {
+  display: inline-grid;
+  grid-template-columns: 1fr 3rem;
+  align-items: center;
+  gap: 0.3em 0.3em;
+}
+
+#global-parameters .param-name {
+  text-align: right;
+}
+
+input[type="number"] {
+  width: 3rem;
+}
+
+#run-id,
+#best-routeId,
+#best-path {
+  font-family: monospace;
+}

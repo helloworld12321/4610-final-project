@@ -3,32 +3,43 @@
  */
 
 import $ from 'jquery';
-import { promise as queue } from 'fastq';
-import { makeRandomRoutes } from './random-routes';
-import { getBestRoutes } from './best-routes';
-import { getRouteById } from './get-route-by-id';
+
 import './index.css';
+import * as form from './page/form-fields';
+import * as map from './page/map';
+import { runEvolution } from './evolution';
 
-const buttons = [
-    { id: '#generate-random-routes', handler: makeRandomRoutes },
-    { id: '#get-best-routes', handler: getBestRoutes },
-    { id: '#get-route-by-id', handler: getRouteById },
-];
+map.initMap();
 
-// This is an important point--we don't want two copies of a handler running at
-// the same time. (If the user clicks a button twice in quick succession, the
-// second handler should wait for the first one to finish.)
-// To regulate this, we need one task queue per button. Each button press will
-// add a task to that queue.
-const queues = {};
+// Set reasonable defaults for the evolution.
+form.setPopulationSize(100);
+form.setNumParents(20);
+form.setNumGenerations(20);
 
-for (const { id, handler } of buttons) {
-    queues[id] = queue(handler, 1);
-
-    // Note that because of how `const` variables are scoped, we don't have to
-    // worry about the old "creating a closure in a for loop" issue.
-    // (See: https://stackoverflow.com/a/750506)
-    $(id).on('click', () => {
-        queues[id].push();
+$('#run-evolution').on('click', () => {
+    // Disable the button to prevent the user from running several evolutions
+    // at once. (See async notes below.)
+    $('#run-evolution').prop('disabled', true);
+    runEvolution().finally(() => {
+        $('#run-evolution').prop('disabled', false);
     });
-}
+});
+
+// Async notes:
+//
+// From some preliminary testing, it looks like, when the user clicks a
+// button, they aren't able to click it again until after that button's
+// handler's task on the event loop has completed. (For our handler, that
+// happens right after we register the "finally" callback with the
+// `runEvolution` promise.)
+//
+// So, if the user clicks the "Run evolution" button, they can't click it
+// again until the current evolution is completely done.
+//
+// They can't click the button again *before* the click handler has finished.
+// (The browser prevents that.)
+//
+// And they can't click the button again *after* the click handler has
+// finished. (Because at that point the button will be disabled.)
+//
+// (I tested this behavior on a Mac in Chrome, Safari, and Firefox.)

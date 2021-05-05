@@ -2,7 +2,7 @@
 
 /**
  * Given a particular run of the evolutionary computation and a generation
- * number from that run, this lambda sends the IDs of the N shortest routes
+ * number from that run, this lambda sends summaries of the N shortest routes
  * from that generation.
  *
  * (For a value of N provided by the caller.)
