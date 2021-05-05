@@ -17,62 +17,66 @@
     <p>Generate and retrieve routes passing through cities in Minnesota.</p>
   </header>
 
+  <div id="global-parameters">
+    <span class="param-name">Run ID:</span>
+    <span id="run-id"></span>
+
+    <label for="population-size" class="param-name">Population size:</label>
+    <input type="number" id="population-size">
+
+    <label for="num-parents" class="param-name">
+      Number of parents to keep:
+    </label>
+    <input type="number" id="num-parents">
+  </div>
+
+  <div id="map"></div>
+
   <div>
-    <p>
-      (Later in the project, we'll generate the run ID and the generation for
-      you. At the moment, you'll have to add them in by hand.)
-    </p>
+    <h2>Best routes so far</h2>
+    <ul>
+      <!-- Content will be added to each of these <li>s at runtime. -->
+      <li>
+        Best <code>routeId</code>:
+        <span id="best-routeId"></span>
+      </li>
 
-    <label for="run-id-text-field">Run ID:</label>
-    <input type="text" id="run-id-text-field">
+      <li>
+        Best length:
+        <span id="best-length"></span>
+      </li>
 
-    <label for="generation-text-field">Generation:</label>
-    <input type="text" id="generation-text-field">
+      <li>
+        Best path:
+        <span id="best-path"></span>
+        <ol id="best-route-cities"></ol>
+      </li>
+      <li>
+        Current threshold:
+        <span id="current-threshold"></span>
+      </li>
+    </ul>
   </div>
 
   <div>
-    <h2>Generate new random routes</h2>
+    <h2>Evolve solutions!</h2>
 
-    <label for="num-to-generate">How many to generate?</label>
-    <input type="text" id="num-to-generate">
-
-    <button type="button" id="generate-random-routes">
-      Generate random routes
-    </button>
-
-    <div id="random-route-details">
-      <!-- Contents will be added dynamically. -->
-    </div>
-
-    <ol id="new-route-list">
-      <!-- Contents will be added dynamically. -->
-    </ol>
+    <label for="num-generations">How many generations to run?</label>
+    <input type="number" id="num-generations">
+    <button type="button" id="run-evolution">Run evolution</button>
   </div>
 
   <div>
-    <h2>Get best routes</h2>
-
-    <label for="num-best-to-get">How many to get?</label>
-    <input type="text" id="num-best-to-get">
-
-    <button type="button" id="get-best-routes">Get best routes</button>
-
-    <ol id="best-route-list">
-      <!-- Contents will be added dynamically. -->
-    </ol>
+    <h2>
+      Current generation:
+      <span id="current-generation"></span>
+    </h2>
+    <ol id="new-routes-list"></ol>
   </div>
 
-  <div class="get-route-by-id">
-    <h2>Get route by ID</h2>
-
-    <label for="route-id">Route ID to retrieve?</label>
-    <input type="text" id="route-id">
-
-    <button type="button" id="get-route-by-id">Get route by ID</button>
-
-    <pre id="route-by-id">
-      <!-- Contents will be added dynamically. -->
-    </pre>
+  <div>
+    <h2>Best routes from the previous generation</h2>
+    <ol id="best-routes-list"></ol>
   </div>
 </body>
 </html>
