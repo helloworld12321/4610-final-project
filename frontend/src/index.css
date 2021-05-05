@@ -1,0 +1,22 @@
+#map {
+  height: 60vh;
+  width: 100%;
+}
+
+#global-parameters {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.2em;
+}
+
+#global-parameters label {
+  text-align: right;
+}
+
+#best-routeId,
+#best-path,
+#current-generation,
+#new-routes-list,
+#best-routes-list {
+  font-family: monospace;
+}
