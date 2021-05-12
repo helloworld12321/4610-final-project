@@ -71,7 +71,7 @@ exports.checkGeneration = makeCheckerFor(
 
 exports.checkNumToReturn = makeCheckerFor(
     'numToReturn',
-    matchesAll(exists, isNonNegative, isNonNegative),
+    matchesAll(exists, isNumeric, isNonNegative),
 );
 
 exports.checkNumChildren = makeCheckerFor(
